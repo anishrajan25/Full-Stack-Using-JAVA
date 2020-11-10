@@ -14,6 +14,11 @@ class Box {
         return this.length * this.width * this.height;
     }
     @Override
+    public boolean equals(Object ob) {
+        Box tmp = (Box) ob;
+        return Double.compare(this.getVolume(),tmp.getVolume()) == 0;
+    }
+    @Override
     public String toString() {
         return "Length : " + this.length  +" Width: "+ this.width + " Height : " + this.height + "\n"; 
     }
