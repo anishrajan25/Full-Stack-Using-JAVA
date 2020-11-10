@@ -18,6 +18,11 @@ class Card implements Comparable<Card> {
         return "Symbol : " + symbol + ", Number : " + number +"\n"; 
     }
     @Override
+    public boolean equals(Object ob) {
+        Card tmp = (Card) ob;
+        return this.symbol.equals(tmp.symbol);
+    }
+    @Override
     public int compareTo(Card ob) {
         return this.symbol.compareTo(ob.symbol);
     }
