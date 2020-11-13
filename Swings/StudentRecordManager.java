@@ -145,6 +145,8 @@ public class StudentRecordManager extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Records sorted by " + order , "Alert", JOptionPane.INFORMATION_MESSAGE);
 			} catch(Exception ex) {
 				JOptionPane.showMessageDialog(this,"Please Select a Parameter you want to Sort By.","Alert",JOptionPane.ERROR_MESSAGE);
+			} finally {
+				bg.clearSelection();
 			}
 		}	
 	}
