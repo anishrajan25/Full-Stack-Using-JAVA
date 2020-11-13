@@ -108,7 +108,45 @@ public class StudentRecordManager extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		String button = ((JButton)e.getSource()).getText();
+		if(button.equals("Insert")) {
+			try {
+				String roll_no = rollNoJTF.getText();
+				String name = nameJTF.getText();
+				String marks = marksJTF.getText();
+				if(roll_no.equals("") || name.equals("") || marks.equals("")) throw new Exception();
+				students.add(new Student(Integer.valueOf(roll_no), name, Double.valueOf(marks)));
+				JOptionPane.showMessageDialog(this, "Added Successfully", "Alert", JOptionPane.INFORMATION_MESSAGE);
+			} catch(Exception ex) {
+				JOptionPane.showMessageDialog(this, "Invalid Inputs : Try Again", "Alert", JOptionPane.ERROR_MESSAGE);
+			} finally {
+				rollNoJTF.setText("");
+				nameJTF.setText("");
+				marksJTF.setText("");
+			}
+		} else if(button.equals("Display")) {
+			String res = new String();
+			for(Student s : students) {
+				res += s.toString() + "\n";
+			}
+			JOptionPane.showMessageDialog(this, res, "Results", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			try {
+				String order = bg.getSelection().getActionCommand();
+				if(order.equals("Marks")) {
+					Collections.sort(students, (a, b) -> Double.compare(b.getMarks(), a.getMarks()));
+				}
+				else if(order.equals("Name")) {
+					Collections.sort(students, (a, b) -> a.getName().compareTo(b.getName()));
+				} 
+				else {
+					Collections.sort(students, (a, b) -> a.getRollNumber() - b.getRollNumber());
+				}
+				JOptionPane.showMessageDialog(this, "Records sorted by " + order , "Alert", JOptionPane.INFORMATION_MESSAGE);
+			} catch(Exception ex) {
+				JOptionPane.showMessageDialog(this,"Please Select a Parameter you want to Sort By.","Alert",JOptionPane.ERROR_MESSAGE);
+			}
+		}	
 	}
 }
 class Student {
