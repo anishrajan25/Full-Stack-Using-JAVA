@@ -45,6 +45,30 @@ class Database {
 		}
 	}
 	
+	public void updateMarks(int rno, double m) {
+		try {
+			ps = con.prepareStatement("update prac_student set marks=? where roll_no=?");
+			ps.setDouble(1, m);
+			ps.setInt(2, rno);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateName(int rno, String n) {
+		try {
+			ps = con.prepareStatement("update prac_student set sname=? where roll_no=?");
+			ps.setString(1, n);
+			ps.setInt(2, rno);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public ResultSet display() {
 		try {
 			ResultSet rs = st.executeQuery("select * from prac_student");
