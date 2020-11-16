@@ -34,6 +34,7 @@ public class StudentDatabaseManager extends JFrame implements ActionListener {
     public StudentDatabaseManager() {
         super("Student Database Manager");
         db = new Database();
+        db.createTable();
         students = new ArrayList();
         
         // INSERT PANEL
@@ -201,8 +202,89 @@ public class StudentDatabaseManager extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        
+        String clicked = ((JButton)e.getSource()).getText();
+        if(clicked.equals("Select")) {
+            String panel = String.valueOf(cb.getItemAt(cb.getSelectedIndex()));
+            if(panel.equals("Delete")) {
+                remove(insert);
+                remove(update);
+                remove(display);
+                add(delete);
+            } else if(panel.equals("Update")) {
+                remove(insert);
+                remove(delete);
+                remove(display);
+                add(update);
+            } else if(panel.equals("Display")) {
+                remove(insert);
+                remove(update);
+                remove(delete);
+                add(display);
+            } else {
+                remove(delete);
+                remove(update);
+                remove(display);
+                add(insert);
+            }
+//          setVisible(false);
+//          setVisible(true);
+            setSize(700, 499);
+            setSize(700, 500);
+        }
+        else if(clicked.equals("Insert")) {
+            try {
+                String roll_no = rollNoJTF.getText();
+                String name = nameJTF.getText();
+                String marks = marksJTF.getText();
+                if(roll_no.equals("") || name.equals("") || marks.equals("")) throw new Exception();
+                db.insertData(Integer.valueOf(roll_no), name , Double.valueOf(marks));
+                JOptionPane.showMessageDialog(this, "Added Successfully", "Alert", JOptionPane.INFORMATION_MESSAGE);
+            } catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Inputs : Try Again", "Alert", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                rollNoJTF.setText("");
+                nameJTF.setText("");
+                marksJTF.setText("");
+            }
+        }
+        else if(clicked.equals("Delete")) {
+            try {
+                String rno = delete_rno_tf.getText();
+                if(rno.equals("")) throw new Exception();
+                db.deleteData(Integer.valueOf(rno));
+                JOptionPane.showMessageDialog(this, "Deleted Successfully", "Alert", JOptionPane.INFORMATION_MESSAGE);
+            } catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Inputs : Try Again", "Alert", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                delete_rno_tf.setText("");
+            }
+        }
+        else if(clicked.equals("Update")) {
+            try {
+                String rno = update_rno_tf.getText();
+                String update = updated_value_tf.getText();
+                String col = field.getSelection().getActionCommand();
+                if(rno.equals("") || update.equals("") || col == null || col.equals("")) throw new Exception();
+                if(col.equals("Name")) {
+                    db.updateName(Integer.valueOf(rno), update);
+                } else {
+                    db.updateMarks(Integer.valueOf(rno), Double.valueOf(update));
+                }
+                JOptionPane.showMessageDialog(this, "Updated " + col + " Successfully", "Alert", JOptionPane.INFORMATION_MESSAGE);
+            } catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid Inputs : Try Again", "Alert", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                update_rno_tf.setText("");
+                updated_value_tf.setText("");
+                field.clearSelection();
+            }
+        }
+        else if(clicked.equals("Display")) {
+        	
+        }
     }
     
-    
+    private void displayTable(String order) {
+        
+    }
 }
