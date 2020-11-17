@@ -203,35 +203,7 @@ public class StudentDatabaseManager extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         String clicked = ((JButton)e.getSource()).getText();
-        if(clicked.equals("Select")) {
-            String panel = String.valueOf(cb.getItemAt(cb.getSelectedIndex()));
-            if(panel.equals("Delete")) {
-                remove(insert);
-                remove(update);
-                remove(display);
-                add(delete);
-            } else if(panel.equals("Update")) {
-                remove(insert);
-                remove(delete);
-                remove(display);
-                add(update);
-            } else if(panel.equals("Display")) {
-                remove(insert);
-                remove(update);
-                remove(delete);
-                add(display);
-            } else {
-                remove(delete);
-                remove(update);
-                remove(display);
-                add(insert);
-            }
-//          setVisible(false);
-//          setVisible(true);
-            setSize(700, 499);
-            setSize(700, 500);
-        }
-        else if(clicked.equals("Insert")) {
+        if(clicked.equals("Insert")) {
             try {
                 String roll_no = rollNoJTF.getText();
                 String name = nameJTF.getText();
@@ -280,11 +252,52 @@ public class StudentDatabaseManager extends JFrame implements ActionListener {
             }
         }
         else if(clicked.equals("Display")) {
-        	
+        	try {
+				String order = bg.getSelection().getActionCommand();
+				this.displayTable(order);
+			} catch(Exception ex) {
+				this.displayTable(null);
+			} finally {
+				bg.clearSelection();
+			}
         }
     }
     
     private void displayTable(String order) {
-        
+        ResultSet rs = db.display();
+        try {
+        	students = new ArrayList();
+            while(rs.next()) {
+                students.add(new Student(rs.getInt(1), rs.getString(2), rs.getDouble(3)));
+            }
+            if(order != null) {
+            	if(order.equals("Marks")) {
+					Collections.sort(students, (a, b) -> Double.compare(b.getMarks(), a.getMarks()));
+				}
+				else if(order.equals("Name")) {
+					Collections.sort(students, (a, b) -> a.getName().compareTo(b.getName()));
+				} 
+				else {
+					Collections.sort(students, (a, b) -> a.getRollNumber() - b.getRollNumber());
+				}
+            }
+            String res[][] = new String[students.size()][3];
+            for(int i = 0; i < students.size(); ++i) {
+                Student tmp = students.get(i);
+//                System.out.println(tmp);
+                res[i][0] = String.valueOf(tmp.getRollNumber());
+                res[i][1] = tmp.getName();
+                res[i][2] = String.valueOf(tmp.getMarks());
+            }
+            table = new JTable(res, new String[]{"Roll Number", "Name", "Marks"});
+			JScrollPane sp=new JScrollPane(table);
+			sp.setBounds(170, 20, 490, 380);
+			display.add(sp);
+            setSize(700, 499);
+            setSize(700, 500);
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
     }
 }
